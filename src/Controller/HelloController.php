@@ -20,7 +20,7 @@ class HelloController
     #[Route('/messages/{id<\d+>}', name: 'app_show_one')]
     public function showOne(int $id): Response
     {
-        return new Response($this->messages[$id]);
+        return new Response('<b>$this->messages[$id]</b>');
 
 
     }
