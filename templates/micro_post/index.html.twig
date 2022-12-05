@@ -15,7 +15,7 @@
                {{ post.text }}
                </div> 
                <div class="text-gray-500 dark:text-gray-400">
-               {{ post.created | date("M j, Y")}}
+               {{ post.created | date("M j, Y") }}
                </div>
                <div class="text-gray-500 dark:text-gray-400">
                 <a href="#">
@@ -24,8 +24,11 @@
                </div> 
                <div class="text-sm text-gray-500 dark:text-gray-400">
                 <a href="#">
-                   user@email.com
-               </div> 
+                   user@email.com </a>
+               </div>
+               <div>
+                    <a href="{{ path('app_micro_post_edit', {post: post.id}) }}">Edit</a>
+               </div>
           </div>
           {% endfor %}
      {% else %}
