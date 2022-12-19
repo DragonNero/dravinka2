@@ -9,6 +9,7 @@ use App\Form\CommentType;
 use App\Form\MicroPostType;
 use App\Repository\CommentRepository;
 use App\Repository\MicroPostRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,9 +34,11 @@ class MicroPostController extends AbstractController
         ]);
     }
     #[Route('/micro-post/add', name: 'app_micro_post_add', priority:2 )]
-    public function save(Request $request, MicroPostRepository $posts): Response
-    {
-        
+
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function save(Request $request, MicroPostRepository $posts
+    ): Response {
+
         $form = $this->createForm(MicroPostType::class, new MicroPost());
 
         $form->handleRequest($request);
@@ -60,6 +63,7 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/{post}/edit', name: 'app_micro_post_edit')]
+    #[IsGranted('ROLE_EDITOR')]
     public function edit(MicroPost $post, Request $request, MicroPostRepository $posts): Response
     {
         
@@ -85,6 +89,7 @@ class MicroPostController extends AbstractController
     }
 
     #[Route('/micro-post/{post}/comment', name: 'app_micro_post_comment')]
+    #[IsGranted('ROLE_COMMENTER')]
     public function addComment(MicroPost $post, Request $request,  CommentRepository $comments): Response
     {
         
