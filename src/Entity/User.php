@@ -6,43 +6,39 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
-    #[ORM\Column(length: 180, unique: true)]
-    private ?string $email = null;
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    private $email;
 
     #[ORM\Column(type: 'json')]
-    private array $roles = [];
+    private $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column(type: 'string')]
-    private ?string $password = null;
+    private $password;
 
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserProfile::class, cascade: ['persist', 'remove'])]
-    private ?UserProfile $userProfile = null;
+    private $userProfile;
 
     #[ORM\ManyToMany(targetEntity: MicroPost::class, mappedBy: 'likedBy')]
-    private Collection $liked;
+    private $liked;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: MicroPost::class)]
-    private Collection $posts;
+    private $posts;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class)]
-    private Collection $comments;
+    private $comments;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
@@ -89,6 +85,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+
+        if ($this->isVerified()) {
+            $roles[] = 'ROLE_WRITER';
+        }
 
         return array_unique($roles);
     }
@@ -152,7 +152,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function addLiked(MicroPost $liked): self
     {
         if (!$this->liked->contains($liked)) {
-            $this->liked->add($liked);
+            $this->liked[] = $liked;
             $liked->addLikedBy($this);
         }
 
@@ -179,7 +179,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function addPost(MicroPost $post): self
     {
         if (!$this->posts->contains($post)) {
-            $this->posts->add($post);
+            $this->posts[] = $post;
             $post->setAuthor($this);
         }
 
@@ -209,7 +209,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
+            $this->comments[] = $comment;
             $comment->setAuthor($this);
         }
 
