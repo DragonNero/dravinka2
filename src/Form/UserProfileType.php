@@ -6,6 +6,7 @@ use App\Entity\UserProfile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class UserProfileType extends AbstractType
 {
@@ -18,8 +19,14 @@ class UserProfileType extends AbstractType
             ->add('twitterUsername')
             ->add('company')
             ->add('location')
-            ->add('dateOfBirth')
-        ;
+            ->add(
+                'dateOfBirth',
+                DateType::class,
+                [
+                    'widget' => 'single_text',
+                    'required' => false
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
