@@ -33,7 +33,7 @@ class SettingsProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $userProfile = $form->getData();
             $user->setUserProfile($userProfile);
-            $users->save($user, true);
+            $users->add($user, true);
             $this->addFlash(
                 'success',
                 'Your user profile settings were saved.'
@@ -48,6 +48,18 @@ class SettingsProfileController extends AbstractController
             'settings_profile/profile.html.twig',
             [
                 'form' => $form->createView(),
+            ]
+        );
+    }
+
+    #[Route('/settings/profile-image', name: 'app_settings_profile_image')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function profileImage(): Response
+    {
+        return $this->render(
+            'settings_profile/profile_image.html.twig',
+            [
+                // 'form' => $form->createView(),
             ]
         );
     }
