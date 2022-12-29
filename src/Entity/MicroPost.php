@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use DateTime;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MicroPostRepository;
 use Doctrine\Common\Collections\Collection;
@@ -15,40 +14,44 @@ class MicroPost
 {
     public const EDIT = 'POST_EDIT';
     public const VIEW = 'POST_VIEW';
-    
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank()]
-    #[Assert\Length(min: 5, max: 255, minMessage: 'Title is too short')]
-    private ?string $title = null;
+    #[Assert\Length(min: 5, max: 255, minMessage: 'Title is to short, 5 characters is the minimum.')]
+    private $title;
 
     #[ORM\Column(type: 'string', length: 500)]
     #[Assert\NotBlank()]
     #[Assert\Length(min: 5, max: 500)]
-    private ?string $text = null;
+    private $text;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $created = null;
+    #[ORM\Column(type: 'datetime')]
+    private $created;
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, orphanRemoval: true)]
-    private Collection $comments;
+    private $comments;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'liked')]
-    private Collection $likedBy;
+    private $likedBy;
 
-    #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $author = null;
+    private $author;
+
+    #[ORM\Column(type: 'boolean')]
+    private $extraPrivacy;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->likedBy = new ArrayCollection();
         $this->created = new DateTime;
+        $this->extraPrivacy = false;
     }
 
     public function getId(): ?int
@@ -103,7 +106,7 @@ class MicroPost
     public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
+            $this->comments[] = $comment;
             $comment->setPost($this);
         }
 
@@ -133,7 +136,7 @@ class MicroPost
     public function addLikedBy(User $likedBy): self
     {
         if (!$this->likedBy->contains($likedBy)) {
-            $this->likedBy->add($likedBy);
+            $this->likedBy[] = $likedBy;
         }
 
         return $this;
@@ -154,6 +157,18 @@ class MicroPost
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function isExtraPrivacy(): ?bool
+    {
+        return $this->extraPrivacy;
+    }
+
+    public function setExtraPrivacy(bool $extraPrivacy): self
+    {
+        $this->extraPrivacy = $extraPrivacy;
 
         return $this;
     }
