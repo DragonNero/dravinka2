@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserProfileRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserProfileRepository::class)]
@@ -11,33 +10,36 @@ class UserProfile
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $name = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $name;
 
-    #[ORM\Column(length: 1024, nullable: true)]
-    private ?string $bio = null;
+    #[ORM\Column(type: 'string', length: 1024, nullable: true)]
+    private $bio;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $websiteUrl = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $websiteUrl;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $twitterUsername = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $twitterUsername;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $company = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $company;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $location = null;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $location;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateOfBirth = null;
+    #[ORM\Column(type: 'date', nullable: true)]
+    private $dateOfBirth;
 
-    #[ORM\OneToOne(inversedBy: 'userProfile', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'userProfile', targetEntity: User::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private $user;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $image;
 
     public function getId(): ?int
     {
@@ -136,6 +138,18 @@ class UserProfile
     public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }
