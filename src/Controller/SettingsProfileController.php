@@ -39,7 +39,7 @@ class SettingsProfileController extends AbstractController
             $users->add($user, true);
             $this->addFlash(
                 'success',
-                'Your user profile settings were saved.'
+                'Your profile settings were saved.'
             );
 
             return $this->redirectToRoute(
