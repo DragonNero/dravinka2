@@ -50,7 +50,7 @@ class MicroPost
     {
         $this->comments = new ArrayCollection();
         $this->likedBy = new ArrayCollection();
-        $this->created = new DateTime;
+        $this->created = new DateTime();
         $this->extraPrivacy = false;
     }
 

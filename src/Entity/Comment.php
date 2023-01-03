@@ -8,9 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CommentRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
-
-
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
 {
@@ -35,9 +32,9 @@ class Comment
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $created = null;
 
-    public function __construct() {
-        $this->created = new DateTime;
-
+    public function __construct()
+    {
+        $this->created = new DateTime();
     }
 
     public function getId(): ?int
