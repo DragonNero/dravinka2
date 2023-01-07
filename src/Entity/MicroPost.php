@@ -25,9 +25,9 @@ class MicroPost
     #[Assert\Length(min: 5, max: 255, minMessage: 'Title is to short, 5 characters is the minimum.')]
     private $title;
 
-    #[ORM\Column(type: 'string', length: 500)]
+    #[ORM\Column(type: 'string', length: 10000)]
     #[Assert\NotBlank()]
-    #[Assert\Length(min: 5, max: 500)]
+    #[Assert\Length(min: 5, max: 10000)]
     private $text;
 
     #[ORM\Column(type: 'datetime')]
