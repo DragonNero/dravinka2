@@ -23,7 +23,7 @@
     <body class="bg-gray-100 text-gray-800 m-10 dark:bg-gray-800 dark:text-white">
         <div class="w-full md:w-2/3 mx-auto mb-4 flex justify-between items-center">
             <div class="text-4xl">
-                <a href="{{ path('app_micro_post') }}">Home</a>
+                <a href="{{ path('app_micro_post') }}">Home Page</a>
                 {% block bread %}
 
                 {% endblock %}
@@ -33,7 +33,7 @@
                 <div class="text-sm text-gray-500 dark:text-gray-400 flex">
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <div>
-                        <a href="{{ path('app_micro_post_add') }}">Add New</a>
+                        <a href="{{ path('app_micro_post_add') }}">Add New Recipe</a>
                     </div>
                     <div class="ml-2">
                         <a href="{{ path('app_settings_profile') }}">Profile Settings</a>
